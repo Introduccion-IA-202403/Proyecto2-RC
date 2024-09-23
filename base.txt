@@ -1,5 +1,6 @@
 FOR_ALL x (FOR_ALL y Animal(y) IMPLIES (Ama(x,y))) IMPLIES (EXIST z Ama(z,x))
-FOR_ALL x (EXIST y Mata(x, y) AND (Animal(y))) IMPLIES (FOR_ALL z NOT Ama(z,x))
+FOR_ALL x (EXIST y Mata(x,y) AND (Animal(y))) IMPLIES (FOR_ALL z NOT Ama(z,x))
 FOR_ALL x Animal(x) IMPLIES (Ama(Jack,x))
 (Mata(Jack, Tuna) OR (Mata(Curiosidad, Tuna))) AND (Gato(Tuna))
 FOR_ALL x Gato(x) IMPLIES (Animal(x))
+NOT (NOT Gato(x))

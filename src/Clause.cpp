@@ -32,9 +32,13 @@ Clause::Clause(string &raw, int &i) {
             if (token == "") { // Comienza una nueva clausula
                 if (buildFirst) {
                     this->first = new Clause(raw, i);
+                    this->first->parent = this;
                     buildFirst = false;
                 }
-                else this->second = new Clause(raw, i);
+                else {
+                    this->second = new Clause(raw, i);
+                    this->second->parent = this;
+                }
             } else { // Comienzan los argumentos de un predicado.
                 this->predicate = Predicate(token, raw, i);
                 token = "";

@@ -33,7 +33,7 @@ public:
     ~Clause();
 
 private:
-    Clause *first = nullptr, *second = nullptr;
+    Clause *first = nullptr, *second = nullptr, *parent = nullptr;
     vector<Quantifier> context, quantifiers;
     Predicate predicate;
     bool NOT;
