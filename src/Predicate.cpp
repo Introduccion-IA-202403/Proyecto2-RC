@@ -8,7 +8,7 @@ void Predicate::setName(const string &name) {
     Predicate::name = name;
 }
 
-const vector<PredicateArg> &Predicate::getArgs() const {
+vector<PredicateArg> &Predicate::getArgs() {
     return args;
 }
 

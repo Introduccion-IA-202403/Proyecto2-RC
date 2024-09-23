@@ -25,3 +25,15 @@ PredicateArgType PredicateArg::getType() const {
 void PredicateArg::setType(PredicateArgType type) {
     PredicateArg::type = type;
 }
+
+const vector<char> &PredicateArg::getArgsSymbols() const {
+    return argsSymbols;
+}
+
+void PredicateArg::setArgsSymbols(const vector<char> argsSymbols) {
+    PredicateArg::argsSymbols = argsSymbols;
+}
+
+void PredicateArg::addArgSymbolVector(char n) {
+    this->argsSymbols.push_back(n);
+}

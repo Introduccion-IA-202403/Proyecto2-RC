@@ -49,11 +49,11 @@ Clause::Clause(string &raw, int &i) {
     }
 }
 
-Clause *Clause::getFirst() const {
+Clause *Clause::getFirst() {
     return first;
 }
 
-Clause *Clause::getSecond() const {
+Clause *Clause::getSecond() {
     return second;
 }
 
@@ -61,11 +61,11 @@ const vector<Quantifier> &Clause::getContext() const {
     return context;
 }
 
-const vector<Quantifier> &Clause::getQuantifiers() const {
+vector<Quantifier> &Clause::getQuantifiers() {
     return quantifiers;
 }
 
-const Predicate &Clause::getPredicate() const {
+Predicate &Clause::getPredicate() {
     return predicate;
 }
 
@@ -89,3 +89,38 @@ Clause::~Clause() {
     delete this->first;
     delete this->second;
 }
+
+void Clause::setLink(Link n) { link = n; }
+
+void Clause::setFirst(Clause *n) {
+
+}
+
+void Clause::setSecond(Clause *n) {
+
+}
+
+void Clause::addQuantifier(Quantifier n) {
+
+}
+
+void Clause::setPredicate(Predicate n) {
+
+}
+
+void Clause::setNot(bool n) {
+
+}
+
+Clause *Clause::getParent() {
+    return nullptr;
+}
+
+void Clause::setParent(Clause *n) {
+
+}
+
+void Clause::setQuantifiers(vector<Quantifier> n) {
+    this->quantifiers = n;
+}
+

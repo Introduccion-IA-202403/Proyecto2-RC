@@ -2,6 +2,7 @@
 #define PROYECTO2_RC_PREDICATEARG_H
 
 #include <iostream>
+#include <vector>
 using namespace std;
 
 enum PredicateArgType {
@@ -27,9 +28,16 @@ public:
 
     void setType(PredicateArgType type);
 
+    const vector<char> &getArgsSymbols() const;
+
+    void setArgsSymbols(const vector<char> argsSymbols);
+    void addArgSymbolVector(char n);
+
 private:
     string name;
     char argSymbol = '-';
+    // Solo aplica si es Skolem
+    vector<char> argsSymbols;
     PredicateArgType type;
 };
 

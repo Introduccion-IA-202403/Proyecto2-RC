@@ -18,7 +18,7 @@ public:
 
     void setName(const string &name);
 
-    const vector<PredicateArg> &getArgs() const;
+    vector<PredicateArg> &getArgs();
 
     void setArgs(const vector<PredicateArg> &args);
 

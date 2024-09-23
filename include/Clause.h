@@ -12,21 +12,33 @@
 class Clause {
 public:
 
+    Clause() = default;
+
     Clause(string &raw, int &start);
 
-    Clause *getFirst() const;
+    Clause *getFirst();
+    void setFirst(Clause * n);
 
-    Clause *getSecond() const;
+    Clause *getSecond();
+    void setSecond(Clause * n);
 
     const vector<Quantifier> &getContext() const;
 
-    const vector<Quantifier> &getQuantifiers() const;
+    vector<Quantifier> &getQuantifiers();
+    void setQuantifiers(vector<Quantifier> n);
+    void addQuantifier(Quantifier n);
 
-    const Predicate &getPredicate() const;
+    Predicate &getPredicate();
+    void setPredicate(Predicate n);
 
     bool isNot() const;
+    void setNot(bool n);
 
     Link getLink() const;
+    void setLink(Link n);
+
+    Clause* getParent();
+    void setParent(Clause *n);
 
     Link evalLink(string str);
 
@@ -36,7 +48,7 @@ private:
     Clause *first = nullptr, *second = nullptr, *parent = nullptr;
     vector<Quantifier> context, quantifiers;
     Predicate predicate;
-    bool NOT;
+    bool NOT = false;
     Link link = EMPTY;
 };
 
