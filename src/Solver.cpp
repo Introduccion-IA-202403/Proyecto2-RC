@@ -6,8 +6,8 @@ Solver::Solver(vector<vector<Clause>>& cl)  {
     clauses = vector<vector<Clause>>(cl.begin(), cl.end());
 
     /**
-     * In this loop we add a number at the end of the variables and constants
-     * to identify them in the unification, because we can not have the same name
+    * En este bucle agregamos un número al final de las variables y constantes
+    * para identificarlas en la unificación, ya que no podemos tener el mismo nombre
      */
     for (int i = 1; i <= (int)clauses.size(); i++) {
         for (auto &clause: clauses[i-1]) {
@@ -23,22 +23,30 @@ Solver::Solver(vector<vector<Clause>>& cl)  {
             }
         }
     }
+
+    for (int i = 0; i < (int)clauses.size(); i++) {
+        for (int j = 0; j < (int)clauses[i].size(); j++) {
+            if (clauses[i][j].isNot()) cout << "NOT ";
+            cout << clauses[i][j].getPredicate() << " ";
+        }
+        cout << endl;
+    }
 }
 
 unordered_map<string, string> Solver::unify(Predicate& from, Predicate& to, unordered_map<string, string> un, bool &flag) {
 
     /**
-     * In this function we use a flag passed by reference to check if the unification is possible
-     * That flag will indicate if the unification is possible or not
+     * En esta función utilizamos una bandera pasada por referencia para verificar si la unificación es posible
+     * Esa bandera indicará si la unificación es posible o no
      */
 
 
     /**
-     * We must return a new copy of the unification for backtracking
+     * Debemos devolver una nueva copia de la unificación para realizar el retroceso
      */
     unordered_map<string, string> ans = un;
     /**
-     * Check if the names and the number of arguments are the same
+     * Verificar si los nombres y el número de argumentos son iguales
      */
     if (from.getArgs().size() != to.getArgs().size()) {
         flag = false;
@@ -47,15 +55,15 @@ unordered_map<string, string> Solver::unify(Predicate& from, Predicate& to, unor
 
 
     /**
-     * Check for all the arguments of the predicates
+     * Verificar todos los argumentos de los predicados
      */
     for (size_t i = 0; i < from.getArgs().size(); ++i) {
         PredicateArg arg1 = PredicateArg(from.getArgs()[i]);
         PredicateArg arg2 = PredicateArg(to.getArgs()[i]);
 
         /**
-         * If the arguments are the same, we continue with the next argument
-         * else we must verify if the arguments can be unified
+         * Si los argumentos son iguales, continuamos con el siguiente argumento
+         * de lo contrario, debemos verificar si los argumentos se pueden unificar
          */
         if (arg1.getName() != arg2.getName()) {
 
@@ -75,7 +83,7 @@ unordered_map<string, string> Solver::unify(Predicate& from, Predicate& to, unor
                     ((arg1.getType() == VARIABLE || arg1.getType() == CONSTANT) && arg2.getType() == SKOLEM)
                     ) { // Si se puede unificar
 
-
+                    continue;
                 if (arg1.getType() == SKOLEM) {
                     /**
                      * If the Skolem function is in the unification, we can not unify
@@ -194,6 +202,9 @@ void Solver::checkInitialResolve(vector<Clause>& resolve, unordered_map<string, 
      */
     for (int i = 0; i < (int)resolve.size(); i++) {
         for (int j = i+1; j < (int)resolve.size(); j++) {
+
+            if (resolve[i].getPredicate().getName() != resolve[j].getPredicate().getName()) continue;
+
             bool good;
             auto possibleUnify = unify(resolve[i].getPredicate(), resolve[j].getPredicate(), uni, good);
             if (!good) continue;
@@ -231,6 +242,9 @@ void Solver::checkInitialResolve(vector<Clause>& resolve, unordered_map<string, 
                     auto argFrom = from.getArgs()[k];
                     auto argTo = to.getArgs()[k];
 
+                    if (argFrom.getType() == SKOLEM || argTo.getType() == SKOLEM) {
+                        continue;
+                    }
                     /**
                      * It does not matter if the arguments are variables or constants, they must be the same
                      */
@@ -282,10 +296,24 @@ void Solver::checkInitialResolve(vector<Clause>& resolve, unordered_map<string, 
 
 bool Solver::backtrack(vector<Clause> resolve, unordered_map<string, string> uni) {
 
+    // cout << "Antes Resolviendo: ";
+    // for (auto &clause: resolve) {
+    //     if (clause.isNot()) cout << "NOT ";
+    //     cout << clause.getPredicate() << " ";
+    // }
+    // cout << endl;
+
     /**
      * Check if the initial set of clauses can be resolved or unified
      */
     checkInitialResolve(resolve, uni);
+
+    cout << "Despues Resolviendo: ";
+    for (auto &clause: resolve) {
+        if (clause.isNot()) cout << "NOT ";
+        cout << clause.getPredicate() << " ";
+    }
+    cout << endl;
 
     /**
      * If the set of clauses is empty, we return true because we have found a solution

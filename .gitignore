@@ -3,3 +3,4 @@ bin
 obj
 CMakeLists.txt
 cmake-build-debug
+.vscode

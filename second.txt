@@ -1,0 +1,7 @@
+FOR_ALL x FOR_ALL y FOR_ALL z ((Americano(x)) AND ((Arma(y)) AND ((Vende(x, y, z)) AND (Hostil(z))))) IMPLIES (Criminal(x))
+FOR_ALL x ((Misil(x)) AND (Tiene(Nono, x))) IMPLIES (Vende(West, x, Nono))
+FOR_ALL x (Enemigo(x, America)) IMPLIES (Hostil(x))
+FOR_ALL x ((Misil(x)) IMPLIES (Arma(x)))
+(Americano(West))
+(EXIST x (Tiene(Nono, x))) AND (Misil(x))
+(Enemigo(Nono, America))

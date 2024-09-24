@@ -2,6 +2,7 @@
 #define PROYECTO2_RC_PREDICATE_H
 
 #include <string>
+#include <iostream>
 #include <PredicateArg.h>
 #include <vector>
 
@@ -31,6 +32,16 @@ public:
     bool isEmpty() const;
 
     void setEmpty(bool empty);
+
+    friend ostream& operator << (ostream &os, const Predicate &p) {
+        os << p.name << "(";
+        for (int i = 0; i < p.args.size(); i++) {
+            os << p.args[i];
+            if (i != p.args.size() - 1) os << ", ";
+        }
+        os << ")";
+        return os;
+    }
 
 private:
     string name;

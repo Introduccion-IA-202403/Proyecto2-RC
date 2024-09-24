@@ -57,6 +57,19 @@ public:
     void addArgSymbolVector(char n);
 
     ~PredicateArg() = default;
+
+    friend ostream& operator << (ostream &os, const PredicateArg &p) {
+        if (p.type == SKOLEM) {
+            os << p.name << "(";
+            for (int i = 0; i < p.argsSymbols.size(); i++) {
+                os << p.argsSymbols[i];
+                if (i != p.argsSymbols.size() - 1) os << ", ";
+            }
+            os << ")";
+        } else if (p.type == CONSTANT) os << p.name;
+        else os << p.argSymbol;
+        return os;
+    }
 private:
     string name;
     string argSymbol = "-";
