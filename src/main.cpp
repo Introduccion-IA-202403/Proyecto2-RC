@@ -41,7 +41,7 @@ int main() {
         auto trns = transform.transformClause(cl);
         for (auto cls: trns) normalBase.push_back(cls);
     }
-    
+
     // Limpiar la memoria
     for (auto & cl : base) delete cl;
 };
