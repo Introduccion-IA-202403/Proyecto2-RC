@@ -14,7 +14,14 @@ enum PredicateArgType {
 class PredicateArg {
 public:
 
-    PredicateArg(string name, char symbol, PredicateArgType type) : name(name), argSymbol(symbol), type(type) {}
+    PredicateArg(string name, char symbol, PredicateArgType type) : name(name), argSymbol(symbol), type(type) {};
+
+    PredicateArg() = default;
+
+    /**
+     * For Skolem Functions
+     */
+    PredicateArg(string n, vector<char> args) : name(n), argsSymbols(args), type(SKOLEM) {};
 
     const string &getName() const;
 

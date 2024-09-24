@@ -93,31 +93,31 @@ Clause::~Clause() {
 void Clause::setLink(Link n) { link = n; }
 
 void Clause::setFirst(Clause *n) {
-
+    this->first = n;
 }
 
 void Clause::setSecond(Clause *n) {
-
+    this->second = n;
 }
 
 void Clause::addQuantifier(Quantifier n) {
-
+    this->quantifiers.push_back(n);
 }
 
 void Clause::setPredicate(Predicate n) {
-
+    this->predicate = n;
 }
 
 void Clause::setNot(bool n) {
-
+    this->NOT = n;
 }
 
 Clause *Clause::getParent() {
-    return nullptr;
+    return this->parent;
 }
 
 void Clause::setParent(Clause *n) {
-
+    this->parent = n;
 }
 
 void Clause::setQuantifiers(vector<Quantifier> n) {
