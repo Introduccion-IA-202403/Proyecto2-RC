@@ -24,7 +24,7 @@ public:
 
     void setName(const string &name);
 
-    vector<PredicateArg> &getArgs();
+    vector<PredicateArg>& getArgs();
 
     void setArgs(const vector<PredicateArg> &args);
 

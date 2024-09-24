@@ -34,14 +34,6 @@ int main() {
         cout << "No se ha encontrado ninguna contradicción. El teorema no se puede probar." << endl;
     }
 
-
-    vector< vector< Clause > > normalBase;
-
-    for (auto cl: base) {
-        auto trns = transform.transformClause(cl);
-        for (auto cls: trns) normalBase.push_back(cls);
-    }
-
     // Limpiar la memoria
     for (auto & cl : base) delete cl;
 };

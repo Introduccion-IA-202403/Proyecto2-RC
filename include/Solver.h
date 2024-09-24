@@ -3,19 +3,23 @@
 
 #include <Clause.h>
 #include <vector>
+#include <unordered_map>
+
+using namespace std;
 
 class Solver {
 public:
-    Solver(vector<Clause*>& base);  // Recibe la base de conocimiento
+    Solver(const vector<vector<Clause>>& clauses);  // Recibe la base de conocimiento
 
     bool resolve();  // Método de resolución por refutación
 
 private:
-    vector<Clause*> base;  // Base de conocimiento
+    vector<vector<Clause>> clauses;  // Base de conocimiento
+    unordered_map<string, string> substitution;
     
-    Clause* resolveClauses(Clause* c1, Clause* c2);  // Resuelve dos clausulas
-
-    bool hasContradiction();  // Verifica si se ha encontrado una contradicción
+    bool backtrack();
+    bool unify(const Predicate& p1, const Predicate& p2);
+    void printSubstitution();
 };
 
 #endif //PROYECTO2_RC_SOLVER_H
