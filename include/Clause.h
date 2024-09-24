@@ -12,8 +12,16 @@
 class Clause {
 public:
 
+    /**
+     *  Default constructor
+     */
     Clause() = default;
 
+    /**
+     * Constructor for a clause with a string and a start index to parse it
+     * @param raw The string to parse
+     * @param start The initial index to start parsing
+     */
     Clause(string &raw, int &start);
 
     Clause *getFirst();
@@ -40,8 +48,16 @@ public:
     Clause* getParent();
     void setParent(Clause *n);
 
+    /**
+     * Evaluates a string to a Link
+     * @param str The string to evaluate
+     * @return  The Link that corresponds to the string
+     */
     Link evalLink(string str);
 
+    /**
+     * Destructor
+     */
     ~Clause();
 
 private:

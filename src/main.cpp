@@ -31,6 +31,7 @@ int main() {
     }
 
 
+
     // Limpiar la memoria
     for (auto & cl : base) delete cl;
 };

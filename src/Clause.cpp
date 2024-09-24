@@ -1,18 +1,42 @@
 #include <Clause.h>
 
+
 Clause::Clause(string &raw, int &i) {
+
+    /**
+     * This constructor is used to parse a string into a Clause object
+     */
     string token;
     bool buildFirst = true;
     for (; i < (int)raw.size(); i++) {
+
+        /**
+         * We break the loop if we find a closing parenthesis because that means we have finished parsing the clause
+         */
         if (raw[i] == ')') break;
-        if (raw[i] == ' ') { // Puede ser un token que nos interese
+
+        /**
+         * We catch some spaces because they can be tokens that we are interested in
+         */
+        if (raw[i] == ' ') {
+
+            /**
+             * We must eval if the token is a quantifier
+             */
             auto quantifier = Quantifier::evalQuantifier(token);
             if (quantifier.getType() != INVALID) {
+                /**
+                 * If the token is a quantifier, we must set the variable of the quantifier
+                 */
                 i++; quantifier.setArg(raw[i]);
                 this->quantifiers.push_back(quantifier);
                 token = "";
                 continue;
             }
+
+            /**
+             * We must eval if the token is a link
+             */
             auto possibleLink = evalLink(token);
             if (possibleLink != INVALID_LINK) {
                 this->link = possibleLink;
@@ -21,15 +45,27 @@ Clause::Clause(string &raw, int &i) {
                 continue;
             }
 
+            /**
+             * We must eval if the token is a NOT
+             */
             if (token == "NOT") {
                 this->NOT = true;
                 token = "";
             }
             continue;
         }
-        if (raw[i] == '(') { // Va a comenzar una nueva clausula o argumentos
+
+        /**
+         * If we find an opening parenthesis, we must start a new clause or arguments
+         */
+        if (raw[i] == '(') {
+
             i++;
-            if (token == "") { // Comienza una nueva clausula
+
+            /**
+             * If the token is empty, we must start a new clause
+             */
+            if (token == "") {
                 if (buildFirst) {
                     this->first = new Clause(raw, i);
                     this->first->parent = this;
@@ -39,11 +75,17 @@ Clause::Clause(string &raw, int &i) {
                     this->second = new Clause(raw, i);
                     this->second->parent = this;
                 }
-            } else { // Comienzan los argumentos de un predicado.
+            } else {
+                /**
+                 * If not, we must create a new predicate because the token is the name of the predicate
+                 */
                 this->predicate = Predicate(token, raw, i);
                 token = "";
             }
         } else {
+            /**
+             * If the character is not a parenthesis, we must add it to the token
+             */
             token += raw[i];
         }
     }

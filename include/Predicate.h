@@ -12,6 +12,12 @@ public:
 
     Predicate() = default;
 
+    /**
+     * Constructor for a predicate with a string and a start index to parse it
+     * @param name The name of the predicate
+     * @param raw The string to parse
+     * @param start The initial index to start parsing
+     */
     Predicate(string name, string &raw, int &start);
 
     const string &getName() const;

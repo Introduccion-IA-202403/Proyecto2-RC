@@ -14,12 +14,23 @@ enum PredicateArgType {
 class PredicateArg {
 public:
 
+    /**
+     * Constructor for a PredicateArg
+     * @param name The name of the argument
+     * @param symbol The symbol of the argument
+     * @param type The type of the argument
+     */
     PredicateArg(string name, char symbol, PredicateArgType type) : name(name), argSymbol(symbol), type(type) {};
 
+    /**
+     * Default constructor
+     */
     PredicateArg() = default;
 
     /**
      * For Skolem Functions
+     * @param n The name of the function
+     * @param args The arguments of the function
      */
     PredicateArg(string n, vector<char> args) : name(n), argsSymbols(args), type(SKOLEM) {};
 
@@ -38,6 +49,11 @@ public:
     const vector<char> &getArgsSymbols() const;
 
     void setArgsSymbols(const vector<char> argsSymbols);
+
+    /**
+     * Adds a symbol to the vector of arguments
+     * @param n The symbol to add
+     */
     void addArgSymbolVector(char n);
 
 private:
