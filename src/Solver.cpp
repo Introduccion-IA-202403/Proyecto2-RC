@@ -9,7 +9,7 @@ Solver::Solver(vector<vector<Clause>>& cl)  {
      * In this loop we add a number at the end of the variables and constants
      * to identify them in the unification, because we can not have the same name
      */
-    for (int i = 1; i <= clauses.size(); i++) {
+    for (int i = 1; i <= (int)clauses.size(); i++) {
         for (auto &clause: clauses[i-1]) {
             for (auto &predArg: clause.getPredicate().getArgs()) {
                 if (predArg.getType() != SKOLEM && predArg.getType() != CONSTANT) {
@@ -192,8 +192,8 @@ void Solver::checkInitialResolve(vector<Clause>& resolve, unordered_map<string, 
     /**
      * Check for all pairs of clauses if they can be unified
      */
-    for (int i = 0; i < resolve.size(); i++) {
-        for (int j = i+1; j < resolve.size(); j++) {
+    for (int i = 0; i < (int)resolve.size(); i++) {
+        for (int j = i+1; j < (int)resolve.size(); j++) {
             bool good;
             auto possibleUnify = unify(resolve[i].getPredicate(), resolve[j].getPredicate(), uni, good);
             if (!good) continue;
@@ -215,9 +215,9 @@ void Solver::checkInitialResolve(vector<Clause>& resolve, unordered_map<string, 
     /**
      * Check if exist a pair of clauses that can be canceled with NOT links
      */
-    for (int i = 0; i < resolve.size(); i++) {
+    for (int i = 0; i < (int)resolve.size(); i++) {
         if (deleted[i]) continue;
-        for (int j = i+1; j < resolve.size(); j++) {
+        for (int j = i+1; j < (int)resolve.size(); j++) {
             if (deleted[j]) continue;
             Predicate from = resolve[i].getPredicate();
             Predicate to = resolve[j].getPredicate();
@@ -227,7 +227,7 @@ void Solver::checkInitialResolve(vector<Clause>& resolve, unordered_map<string, 
              */
             if (resolve[i].isNot() == !resolve[j].isNot() && from.getName() == to.getName()) {
                 bool same = true;
-                for (int k = 0; k < from.getArgs().size(); k++) {
+                for (int k = 0; k < (int)from.getArgs().size(); k++) {
                     auto argFrom = from.getArgs()[k];
                     auto argTo = to.getArgs()[k];
 
@@ -270,7 +270,7 @@ void Solver::checkInitialResolve(vector<Clause>& resolve, unordered_map<string, 
      * We remove the clauses that can be canceled
      */
     vector<Clause> temp;
-    for (int i = 0; i < resolve.size(); i++) {
+    for (int i = 0; i < (int)resolve.size(); i++) {
         if (!deleted[i]) temp.push_back(resolve[i]);
     }
 
