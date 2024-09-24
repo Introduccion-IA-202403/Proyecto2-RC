@@ -2,6 +2,7 @@
 #include <fstream>
 #include <vector>
 #include <Clause.h>
+#include <Solver.h>
 
 using namespace std;
 
@@ -19,6 +20,16 @@ int main() {
         int i = 0;
         base.push_back(new Clause(clause, i));
         cout << "Clausula " << clause << " añadida" << endl;
+    }
+
+    // Crear el solver
+    Solver solver(base);
+
+    // Ejecutar la resolución por refutación
+    if (solver.resolve()) {
+        cout << "Se ha encontrado una contradicción. El teorema es válido." << endl;
+    } else {
+        cout << "No se ha encontrado ninguna contradicción. El teorema no se puede probar." << endl;
     }
 
     // Limpiar la memoria
