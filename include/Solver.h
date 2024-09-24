@@ -4,21 +4,24 @@
 #include <Clause.h>
 #include <vector>
 #include <unordered_map>
+#include <algorithm>
 
 using namespace std;
 
 class Solver {
 public:
-    Solver(const vector<vector<Clause>>& clauses);  // Recibe la base de conocimiento
+    Solver(vector<vector<Clause>>& clauses);  // Recibe la base de conocimiento
 
-    bool resolve();  // Método de resolución por refutación
+    bool resolve(vector<Clause> resolve);  // Método de resolución por refutación
 
 private:
     vector<vector<Clause>> clauses;  // Base de conocimiento
     unordered_map<string, string> substitution;
-    
-    bool backtrack();
-    bool unify(const Predicate& p1, const Predicate& p2);
+
+    void checkInitialResolve(vector<Clause>& resolve, unordered_map<string, string> &uni);
+    void makeUnification(vector<Clause> &resolve, unordered_map<string, string> &uni);
+    bool backtrack(vector<Clause> resolve, unordered_map<string, string> uni);
+    unordered_map<string, string> unify(Predicate& p1, Predicate& p2, unordered_map<string, string> un, bool &flag);
     void printSubstitution();
 };
 

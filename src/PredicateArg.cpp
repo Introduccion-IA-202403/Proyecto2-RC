@@ -10,11 +10,11 @@ void PredicateArg::setName(const std::__cxx11::basic_string<char> &name) {
     PredicateArg::name = name;
 }
 
-char PredicateArg::getArgSymbol() const {
+string PredicateArg::getArgSymbol() const {
     return argSymbol;
 }
 
-void PredicateArg::setArgSymbol(char argSymbol) {
+void PredicateArg::setArgSymbol(string argSymbol) {
     PredicateArg::argSymbol = argSymbol;
 }
 
@@ -26,14 +26,14 @@ void PredicateArg::setType(PredicateArgType type) {
     PredicateArg::type = type;
 }
 
-const vector<char> &PredicateArg::getArgsSymbols() const {
+vector<string> &PredicateArg::getArgsSymbols() {
     return argsSymbols;
 }
 
-void PredicateArg::setArgsSymbols(const vector<char> argsSymbols) {
+void PredicateArg::setArgsSymbols(vector<string> argsSymbols) {
     PredicateArg::argsSymbols = argsSymbols;
 }
 
 void PredicateArg::addArgSymbolVector(char n) {
-    this->argsSymbols.push_back(n);
+    this->argsSymbols.push_back(string(1,n));
 }

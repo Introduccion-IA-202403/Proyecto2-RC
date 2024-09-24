@@ -24,11 +24,27 @@ int main() {
         cout << "Clausula " << clause << " añadida" << endl;
     }
 
-    // Crear el solver
-    Solver solver(base);
+    vector< vector< Clause > > normalBase;
 
+    for (auto cl: base) {
+        auto trns = transform.transformClause(cl);
+        for (auto cls: trns) normalBase.push_back(cls);
+    }
+
+    // Crear el solver
+    Solver solver(normalBase);
+
+    cout << "Ingrese el predicado que desea probar: ";
+    string parse;
+    cin.ignore();
+    getline(cin, parse);
+    int st = 0;
+
+
+    Clause proof(parse, st);
+    proof.setNot(true);
     // Ejecutar la resolución por refutación
-    if (solver.resolve()) {
+    if (solver.resolve({ proof })) {
         cout << "Se ha encontrado una contradicción. El teorema es válido." << endl;
     } else {
         cout << "No se ha encontrado ninguna contradicción. El teorema no se puede probar." << endl;

@@ -20,7 +20,7 @@ public:
      * @param symbol The symbol of the argument
      * @param type The type of the argument
      */
-    PredicateArg(string name, char symbol, PredicateArgType type) : name(name), argSymbol(symbol), type(type) {};
+    PredicateArg(string name, string symbol, PredicateArgType type) : name(name), argSymbol(symbol), type(type) {};
 
     /**
      * Default constructor
@@ -32,23 +32,23 @@ public:
      * @param n The name of the function
      * @param args The arguments of the function
      */
-    PredicateArg(string n, vector<char> args) : name(n), argsSymbols(args), type(SKOLEM) {};
+    PredicateArg(string n, vector<string> args) : name(n), argsSymbols(args), type(SKOLEM) {};
 
     const string &getName() const;
 
     void setName(const string &name);
 
-    char getArgSymbol() const;
+    string getArgSymbol() const;
 
-    void setArgSymbol(char argSymbol);
+    void setArgSymbol(string argSymbol);
 
     PredicateArgType getType() const;
 
     void setType(PredicateArgType type);
 
-    const vector<char> &getArgsSymbols() const;
+    vector<string> &getArgsSymbols();
 
-    void setArgsSymbols(const vector<char> argsSymbols);
+    void setArgsSymbols(vector<string> argsSymbols);
 
     /**
      * Adds a symbol to the vector of arguments
@@ -56,11 +56,12 @@ public:
      */
     void addArgSymbolVector(char n);
 
+    ~PredicateArg() = default;
 private:
     string name;
-    char argSymbol = '-';
+    string argSymbol = "-";
     // Solo aplica si es Skolem
-    vector<char> argsSymbols;
+    vector<string> argsSymbols;
     PredicateArgType type;
 };
 

@@ -47,8 +47,8 @@ Predicate::Predicate(string name, string &raw, int &i) {
         if (raw[i] == ',') {
             this->args.push_back(
                     (token.size() == 1 && islower(token[0])) ?
-                    PredicateArg("", token[0], VARIABLE) :
-                    PredicateArg(token, '-', CONSTANT)
+                    PredicateArg("", string(1, token[0]), VARIABLE) :
+                    PredicateArg(token, "-", CONSTANT)
                     ); // Agregar el argumento sea cual sea
             token = "";
         } else token += raw[i];
@@ -60,7 +60,7 @@ Predicate::Predicate(string name, string &raw, int &i) {
      */
     this->args.push_back(
             (token.size() == 1 && islower(token[0])) ?
-            PredicateArg("", token[0], VARIABLE) :
-            PredicateArg(token, '-', CONSTANT)
+            PredicateArg("", string(1, token[0]), VARIABLE) :
+            PredicateArg(token, "-", CONSTANT)
     );
 }

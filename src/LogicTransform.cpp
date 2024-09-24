@@ -23,18 +23,18 @@ vector<vector<Clause>> LogicTransform::transformClause(Clause *t) {
      * 4. We must delete the quantifiers
      */
     char skolemName = 'A';
-    set<char> variables, argsVar;
+    set<string> variables, argsVar;
     for (auto q: t->getQuantifiers()) {
-        if (q.getType() == EXIST) variables.insert(q.getArg());
-        else argsVar.insert(q.getArg());
+        if (q.getType() == EXIST) variables.insert(string(1, q.getArg()));
+        else argsVar.insert(string(1, q.getArg()));
     }
 
     /**
      * This part is to reference the skolem functions for assigning them to the variables
      */
-    unordered_map<char, PredicateArg> skolemFuncs;
+    unordered_map<string, PredicateArg> skolemFuncs;
     for (auto name: variables) {
-        skolemFuncs[name] = PredicateArg(string(1, skolemName++), vector<char>(argsVar.begin(), argsVar.end()));
+        skolemFuncs[name] = PredicateArg(string(1, skolemName++), vector<string>(argsVar.begin(), argsVar.end()));
     }
 
 
@@ -267,7 +267,7 @@ void LogicTransform::moveQuantifiers(Clause *t, vector<Quantifier> &collect) {
     else t->setQuantifiers(vector<Quantifier>());
 }
 
-void LogicTransform::skolenize(Clause *t, unordered_map<char, PredicateArg> &skolemFuncs) {
+void LogicTransform::skolenize(Clause *t, unordered_map<string, PredicateArg> &skolemFuncs) {
 
     /**
      * Just search for the variables and replace them with the skolem functions

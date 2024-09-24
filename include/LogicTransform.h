@@ -38,7 +38,7 @@ private:
      * @param t The clause to skolenize
      * @param skolemFuncs The map of skolem functions
      */
-    void skolenize(Clause *t, unordered_map<char, PredicateArg>& skolemFuncs);
+    void skolenize(Clause *t, unordered_map<string, PredicateArg>& skolemFuncs);
 
     /**
      * Deletes the OR links in the clause
