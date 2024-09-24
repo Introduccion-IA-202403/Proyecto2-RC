@@ -2,6 +2,7 @@
 #include <fstream>
 #include <vector>
 #include <Clause.h>
+#include <Solver.h>
 #include <LogicTransform.h>
 
 using namespace std;
@@ -23,13 +24,23 @@ int main() {
         cout << "Clausula " << clause << " añadida" << endl;
     }
 
+    // Crear el solver
+    Solver solver(base);
+
+    // Ejecutar la resolución por refutación
+    if (solver.resolve()) {
+        cout << "Se ha encontrado una contradicción. El teorema es válido." << endl;
+    } else {
+        cout << "No se ha encontrado ninguna contradicción. El teorema no se puede probar." << endl;
+    }
+
+
     vector< vector< Clause > > normalBase;
 
     for (auto cl: base) {
         auto trns = transform.transformClause(cl);
         for (auto cls: trns) normalBase.push_back(cls);
     }
-
 
     // Limpiar la memoria
     for (auto & cl : base) delete cl;
