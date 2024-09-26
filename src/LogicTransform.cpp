@@ -1,6 +1,4 @@
-//
-// Created by talkysafe143 on 22/09/24.
-//
+
 #include "LogicTransform.h"
 
 
@@ -14,13 +12,12 @@ vector<vector<Clause>> LogicTransform::transformClause(Clause *t) {
     vector<Quantifier> c;
     moveQuantifiers(t, c);
 
-
     /**
-     * Skolemization works as follows:
-     * 1. We must find the variables and the arguments of the clause
-     * 2. We must find the skolem functions
-     * 3. We must replace the variables with the skolem functions
-     * 4. We must delete the quantifiers
+     * Skolemizacion funciona de la siguiente manera:
+     * 1. Debemos encontrar las variables y los argumentos de la cláusula
+     * 2. Debemos encontrar las funciones skolem
+     * 3. Debemos reemplazar las variables con las funciones de skolem
+     * 4. Debemos eliminar los cuantificadores
      */
     char skolemName = 'A';
     set<string> variables, argsVar;
@@ -30,7 +27,7 @@ vector<vector<Clause>> LogicTransform::transformClause(Clause *t) {
     }
 
     /**
-     * This part is to reference the skolem functions for assigning them to the variables
+     * Esta parte es para referenciar las funciones skolem para asignarlas a las variables
      */
     unordered_map<string, PredicateArg> skolemFuncs;
     for (auto name: variables) {
@@ -41,8 +38,8 @@ vector<vector<Clause>> LogicTransform::transformClause(Clause *t) {
     skolenize(t, skolemFuncs);
 
     /**
-     * We delete the quantifiers of the clause, becuase we have already replaced the variables
-     * with the skolem functions and FOR_ALL quantifiers are not needed
+     * Borramos los cuantificadores de la cláusula, porque ya hemos reemplazado las variables
+     * con las funciones de skolem y los cuantificadores FOR_ALL no son necesarios
      */
     t->setQuantifiers(vector<Quantifier>());
 
@@ -55,19 +52,19 @@ vector<vector<Clause>> LogicTransform::transformClause(Clause *t) {
     collectResults(t, ans, current);
 
     /**
-     * We must add the last clause
+     * Debe agregar la última cláusula
      */
     ans.push_back(current);
     return ans;
 }
 
 /**
- * The following functions can be seen like a functions to traverse the clause (As a tree)
+ * Las siguientes funciones pueden ser vistas como funciones para recorrer la cláusula (como un árbol)
  */
 void LogicTransform::collectResults(Clause *t, vector< vector<Clause>>&collect, vector<Clause>& curr) {
 
     /**
-     * If the clause is a leaf, we must add it to the current vector
+     * Si la cláusula es una hoja, debemos agregarla al vector actual
      */
     if (t->getFirst() == nullptr && t->getSecond() == nullptr) {
         curr.emplace_back(*t);
@@ -76,7 +73,7 @@ void LogicTransform::collectResults(Clause *t, vector< vector<Clause>>&collect, 
     }
 
     /**
-     * If the clause is a leaf, but it is not the first, we must add it to the current vector
+     * Si la cláusula es una hoja, pero no es la primera, debemos agregarla al vector actual
      */
     if (t->getFirst() == nullptr && t->getSecond() != nullptr) {
         curr.emplace_back();
@@ -88,8 +85,8 @@ void LogicTransform::collectResults(Clause *t, vector< vector<Clause>>&collect, 
     if (t->getFirst() != nullptr) collectResults(t->getFirst(), collect, curr);
 
     /**
-     * if the clause is an AND link, we must add the current vector to the collect vector
-     * because we must separate the clauses with the AND link
+     * Si la cláusula tiene un conector AND, debemos agregar el vector actual al vector de recolección
+     * porque debemos separar las cláusulas con el conector AND
      */
     if (t->getLink() == AND) {
         collect.push_back(curr);
@@ -101,23 +98,23 @@ void LogicTransform::collectResults(Clause *t, vector< vector<Clause>>&collect, 
 void LogicTransform::deleteIFF(Clause *t, bool first) {
 
     /**
-     * If the clause is a leaf, we must stop traversing
+     * Si la cláusula es una hoja, debemos detener el recorrido
      */
     if (t->getFirst() == nullptr && t->getSecond() == nullptr) return;
 
     /**
-     * We must traverse the clause
+     * Debemos recorrer la cláusula
      */
     if (t->getFirst() != nullptr) deleteIFF(t->getFirst(), true);
     if (t->getSecond() != nullptr) deleteIFF(t->getSecond(), false);
 
     /**
-     * If the clause is a iff link, we must transform it to a AND link
+     * Si la cláusula es un conector iff, debemos transformarlo en un conector AND
      */
     if (t->getLink() == IFF) {
 
         /**
-         * We must create the new clauses
+         * Deberíamos crear las nuevas cláusulas
          */
         auto *w = new Clause(), *l = new Clause(), *r = new Clause();
         w->setLink(AND); l->setLink(IMPLIES); r->setLink(IMPLIES);
@@ -132,16 +129,16 @@ void LogicTransform::deleteIFF(Clause *t, bool first) {
 
         Clause *cloneL = nullptr, *cloneR = new Clause(*t->getSecond());
 
-        if (t->getFirst() == nullptr) { // There is only one predicate
+        if (t->getFirst() == nullptr) { // Solo hay un predicado
             cloneL = new Clause(*t->getFirst());
-        } else { // This clause has a predicate and a link
+        } else { // Esta clausula tiene un predicado y un conector
             cloneL = new Clause();
             cloneL->setPredicate(t->getPredicate());
             cloneL->setNot(t->isNot());
         }
 
         /**
-         * We must set the parents of the new clauses
+         * Deberíamos establecer los padres de las nuevas cláusulas
          */
         l->setFirst(t->getFirst()); l->setSecond(t->getSecond());
         r->setFirst(cloneR); r->setSecond(cloneL);
@@ -153,12 +150,12 @@ void LogicTransform::deleteIFF(Clause *t, bool first) {
         t->getFirst()->setParent(l); t->getSecond()->setParent(l);
 
         /**
-         * We must delete the old clause for memory management
+         * Deberíamos eliminar la antigua cláusula para la gestión de memoria
          */
         delete t;
 
         /**
-         * We must set the new clause as the current clause
+         * Deberíamos establecer la nueva cláusula como la cláusula actual
          */
         t = w;
     }
@@ -171,13 +168,13 @@ void LogicTransform::deleteImplies(Clause *t) {
     if (t->getSecond() != nullptr) deleteImplies(t->getSecond());
 
     /**
-     * If the clause is an implies link, we must transform it to an OR link
+     * Si la cláusula es un conector implica, debemos transformarlo en un conector OR
      */
     if (t->getLink() == IMPLIES) {
         t->setLink(OR);
 
         /**
-         * If the clause has only one predicate, we must create a new clause
+         * Si la cláusula tiene solo un predicado, debemos crear una nueva cláusula
          */
         if (t->getFirst() == nullptr) {
             auto *w = new Clause();
@@ -192,31 +189,31 @@ void LogicTransform::deleteImplies(Clause *t) {
 }
 
 /**
- * This function is a special case, because we must go from left to right
- * traversing the clause to the leafs isn't the best way to cancel the NOT links
- * We can do it in a single pass and pass the information to the children
+ * Esta función es un caso especial, porque debemos ir de izquierda a derecha
+ * recorrer la cláusula hasta las hojas no es la mejor manera de cancelar los enlaces NOT
+ * Podemos hacerlo en un solo paso y pasar la información a los hijos
  */
 void LogicTransform::transformNOT(Clause *t) {
 
     if (t->getFirst() == nullptr && t->getSecond() == nullptr) return;
 
     /**
-     * If the clause is a NOT link, we must cancel it
+     * Si la cláusula tiene un enlace NOT, debemos cancelarlo
      */
     if (t->isNot()) {
 
         /**
-         * We must cancel the NOT link because we are going to pass the information to the children
+         * Debemos cancelar el conector NOT porque vamos a pasar la información a los hijos
          */
         t->setNot(false);
 
         /**
-         * We must change the link of the clause
+         * Debemos cambiar el conector de la cláusula
          */
         if (t->getSecond() != nullptr) t->setLink((t->getLink() == AND ? OR : AND));
 
         /**
-         * We must change the quantifiers of the clause
+         * Debemos cambiar los cuantificadores de la cláusula
          * FOR_ALL -> EXIST
          * EXIST -> FOR_ALL
          */
@@ -226,8 +223,8 @@ void LogicTransform::transformNOT(Clause *t) {
         }
 
         /**
-         * If the clause has a first member, we pass the information to it
-         * if the member already has a NOT link, we must cancel it
+         * Si la cláusula tiene un primer miembro, pasamos la información a él
+         * si el miembro ya tiene un conector NOT, debemos cancelarlo
          */
         if (t->getFirst() != nullptr) {
             if (t->getFirst()->isNot()) t->getFirst()->setNot(false);
@@ -235,7 +232,7 @@ void LogicTransform::transformNOT(Clause *t) {
         }
 
         /**
-         * same as the first member
+         * Lo mismo para el segundo miembro
          */
         if (t->getSecond() != nullptr) {
             if (t->getSecond()->isNot()) t->getSecond()->setNot(false);
@@ -244,7 +241,7 @@ void LogicTransform::transformNOT(Clause *t) {
     }
 
     /**
-     * We must traverse the clause
+     * Debemos recorrer la cláusula
      */
     if (t->getFirst() != nullptr) transformNOT(t->getFirst());
     if (t->getSecond() != nullptr) transformNOT(t->getSecond());
@@ -255,13 +252,13 @@ void LogicTransform::moveQuantifiers(Clause *t, vector<Quantifier> &collect) {
     if (t->getSecond() != nullptr) moveQuantifiers(t->getSecond(), collect);
 
     /**
-     * Collect the quantifiers of the clause
+     * Recolectamos los cuantificadores de la cláusula
      */
     for (auto g: t->getQuantifiers()) collect.push_back(g);
 
     /**
-     * if the clause is the root, we must set the quantifiers
-     * if not, we delete the quantifiers from the clause
+     * Si la clausula es la raiz, debemos establecer los cuantificadores
+     * si no, debemos eliminar los cuantificadores de la clausula
      */
     if (t->getParent() == nullptr) t->setQuantifiers(collect);
     else t->setQuantifiers(vector<Quantifier>());
@@ -270,7 +267,7 @@ void LogicTransform::moveQuantifiers(Clause *t, vector<Quantifier> &collect) {
 void LogicTransform::skolenize(Clause *t, unordered_map<string, PredicateArg> &skolemFuncs) {
 
     /**
-     * Just search for the variables and replace them with the skolem functions
+     * Solo buscamos las variables y las reemplazamos con las funciones de skolem
      */
     for (auto &arg: t->getPredicate().getArgs()) {
         if (arg.getType() != VARIABLE) continue;
@@ -290,7 +287,7 @@ void LogicTransform::deleteORlinks(Clause *t) {
     if (t->getFirst()->getPredicate().isEmpty() && t->getFirst()->getFirst() == nullptr) return;
 
     /**
-     * If the clause is not an OR or AND link, we must stop traversing
+     * Si la cláusula no es un conector OR o AND, debemos detener el recorrido
      */
     if (t->getLink() != OR || t->getFirst()->getLink() != AND) return;
 
@@ -298,7 +295,7 @@ void LogicTransform::deleteORlinks(Clause *t) {
     if (t->getSecond() != nullptr) deleteORlinks(t->getSecond());
 
     /**
-     * If the clause is an OR link, we must transform it to an AND link
+     * Si la cláusula es un conector OR, debemos transformarlo en un conector AND
      */
     auto *copyY = new Clause(*t->getSecond()), *second = new Clause();
 

@@ -6,7 +6,7 @@
 using namespace std;
 
 /**
- * Enum for the type of quantifier
+ * Enumeración de los tipos de cuantificadores
  */
 enum QuantifierType {
     FOR_ALL,
@@ -18,16 +18,16 @@ class Quantifier {
 public:
 
     /**
-     * Default constructor
-     * @param type The type of the quantifier
-     * @param var The variable of the quantifier
+     * Constructor por defecto
+     * @param type El tipo de cuantificador
+     * @param var La variable del cuantificador
      */
     Quantifier(QuantifierType type, char var) : type(type), arg(var) {}
 
     /**
-     * Evaluates a string to a Quantifier
-     * @param str The string to evaluate
-     * @return The Quantifier that corresponds to the string
+     * Evalúa una cadena a un cuantificador
+     * @param str El string a evaluar
+     * @return El cuantificador que corresponde al string
      */
     static Quantifier evalQuantifier(string str);
 

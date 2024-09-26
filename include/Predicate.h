@@ -14,10 +14,10 @@ public:
     Predicate() = default;
 
     /**
-     * Constructor for a predicate with a string and a start index to parse it
-     * @param name The name of the predicate
-     * @param raw The string to parse
-     * @param start The initial index to start parsing
+    * Constructor para un predicado con una cadena y un índice de inicio para analizarla
+     * @param name El nombre del predicado
+     * @param raw El string a analizar
+     * @param start El indice inicial para comenzar el análisis
      */
     Predicate(string name, string &raw, int &start);
 

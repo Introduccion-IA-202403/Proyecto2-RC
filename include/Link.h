@@ -2,7 +2,7 @@
 #define PROYECTO2_RC_LINK_H
 
 /**
- * Logical Links
+ * Conectores lógicos
  */
 enum Link {
     OR,

@@ -46,6 +46,14 @@ int main() {
     // Ejecutar la resolución por refutación
     if (solver.resolve({ proof })) {
         cout << "Se ha encontrado una contradicción. El teorema es válido." << endl;
+        cout << "El camino usado para encontrar la contradicción es: " << endl;
+        for (auto & path : solver.getPath()) {
+            for (auto & cl : path) {
+                if (cl.isNot()) cout << "NOT ";
+                cout << cl.getPredicate() << " ";
+            }
+            cout << endl;
+        }
     } else {
         cout << "No se ha encontrado ninguna contradicción. El teorema no se puede probar." << endl;
     }

@@ -4,29 +4,29 @@
 Clause::Clause(string &raw, int &i) {
 
     /**
-     * This constructor is used to parse a string into a Clause object
+     * Este constructor se encarga de construir una cláusula a partir de una cadena
      */
     string token;
     bool buildFirst = true;
     for (; i < (int)raw.size(); i++) {
 
         /**
-         * We break the loop if we find a closing parenthesis because that means we have finished parsing the clause
+         * Rompe el ciclo si encuentra un paréntesis de cierre
          */
         if (raw[i] == ')') break;
 
         /**
-         * We catch some spaces because they can be tokens that we are interested in
+         * Capturamos algunos espacios porque pueden ser tokens que nos interesan
          */
         if (raw[i] == ' ') {
 
             /**
-             * We must eval if the token is a quantifier
+             * Debe evaluar si el token es un cuantificador
              */
             auto quantifier = Quantifier::evalQuantifier(token);
             if (quantifier.getType() != INVALID) {
                 /**
-                 * If the token is a quantifier, we must set the variable of the quantifier
+                 * Si el token es un cuantificador, debemos agregarlo a la lista de cuantificadores
                  */
                 i++; quantifier.setArg(raw[i]);
                 this->quantifiers.push_back(quantifier);
@@ -35,7 +35,7 @@ Clause::Clause(string &raw, int &i) {
             }
 
             /**
-             * We must eval if the token is a link
+             * Debemos evaluar si el token es un conector lógico
              */
             auto possibleLink = evalLink(token);
             if (possibleLink != INVALID_LINK) {
@@ -46,7 +46,7 @@ Clause::Clause(string &raw, int &i) {
             }
 
             /**
-             * We must eval if the token is a NOT
+             * Debemos evaluar si el token es un NOT
              */
             if (token == "NOT") {
                 this->NOT = true;
@@ -56,14 +56,14 @@ Clause::Clause(string &raw, int &i) {
         }
 
         /**
-         * If we find an opening parenthesis, we must start a new clause or arguments
+         * Si encontramos un paréntesis, debemos crear una nueva cláusula
          */
         if (raw[i] == '(') {
 
             i++;
 
             /**
-             * If the token is empty, we must start a new clause
+             * Si el token está vacío, debemos crear una nueva cláusula
              */
             if (token == "") {
                 if (buildFirst) {
@@ -77,14 +77,14 @@ Clause::Clause(string &raw, int &i) {
                 }
             } else {
                 /**
-                 * If not, we must create a new predicate because the token is the name of the predicate
+                 * si no, debemos crear un nuevo predicado porque el token es el nombre del predicado
                  */
                 this->predicate = Predicate(token, raw, i);
                 token = "";
             }
         } else {
             /**
-             * If the character is not a parenthesis, we must add it to the token
+             * Si el caracter no es un paréntesis, debemos agregarlo al token
              */
             token += raw[i];
         }

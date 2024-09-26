@@ -30,10 +30,10 @@ Predicate::Predicate(string name, string &raw, int &i) {
     this->name = name;
     string token = "";
 
-    /*
-    * It is assumed that when this constructor is called, there are only variables
-    * or constants, there are no Skolem functions, so it is not validated
-    * whether or not there is a parenthesis in the token
+    /**
+    * Se asume que cuando se llama a este constructor, solo hay variables
+    * o constantes, no hay funciones Skolem, por lo que no se valida
+    * si hay o no un paréntesis en el token
      * */
     while (raw[i] != ')') {
         if (raw[i] == ' ') {
@@ -42,7 +42,7 @@ Predicate::Predicate(string name, string &raw, int &i) {
         }
 
         /**
-         * If the character is a comma, we must add the token to the arguments
+         * Si el caracter es una coma, debemos agregar el token a los argumentos
          */
         if (raw[i] == ',') {
             this->args.push_back(
@@ -56,7 +56,7 @@ Predicate::Predicate(string name, string &raw, int &i) {
     }
 
     /**
-     * We must add the last argument
+     * Debe agregar el último argumento
      */
     this->args.push_back(
             (token.size() == 1 && islower(token[0])) ?

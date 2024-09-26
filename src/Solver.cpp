@@ -36,7 +36,7 @@ Solver::Solver(vector<vector<Clause>>& cl)  {
 unordered_map<string, string> Solver::unify(Predicate& from, Predicate& to, unordered_map<string, string> un, bool &flag) {
 
     /**
-     * En esta función utilizamos una bandera pasada por referencia para verificar si la unificación es posible
+     * En esta función utilizamos una "bandera" pasada por referencia para verificar si la unificación es posible
      * Esa bandera indicará si la unificación es posible o no
      */
 
@@ -76,17 +76,20 @@ unordered_map<string, string> Solver::unify(Predicate& from, Predicate& to, unor
             }
 
             /**
-             * If we have a Skolem function and a variable or a constant, we can unify them
+             * Si tenemos una función Skolem y una variable o una constante, podemos unificarlos
              */
             if (
                     (arg1.getType() == SKOLEM && (arg2.getType() == VARIABLE || arg2.getType() == CONSTANT)) ||
                     ((arg1.getType() == VARIABLE || arg1.getType() == CONSTANT) && arg2.getType() == SKOLEM)
                     ) { // Si se puede unificar
 
-                    continue;
+                //continue;
                 if (arg1.getType() == SKOLEM) {
+
+                    if (arg1.getArgsSymbols().size() == 0) continue;
+
                     /**
-                     * If the Skolem function is in the unification, we can not unify
+                     * Si la función Skolem está en la unificación, no podemos unificar
                      */
                     if (ans.count(arg1.getName())) {
                         flag = false;
@@ -95,9 +98,11 @@ unordered_map<string, string> Solver::unify(Predicate& from, Predicate& to, unor
                     ans[arg1.getName()] = (arg2.getType() == VARIABLE ? arg2.getArgSymbol() : arg2.getName());
                 }
                 else {
+                    
+                    if (arg2.getArgsSymbols().size() == 0) continue;
 
                     /**
-                     * Same as the Skolem function
+                     * Igual que la función Skolem
                      */
                     if (ans.count(arg2.getName())) {
                         flag = false;
@@ -105,7 +110,7 @@ unordered_map<string, string> Solver::unify(Predicate& from, Predicate& to, unor
                     }
 
                     /**
-                     * We store the unification of the Skolem function
+                     * Guardamos la unificación de la función Skolem
                      */
                     ans[arg2.getName()] = (arg1.getType() == VARIABLE ? arg1.getArgSymbol() : arg1.getName());
                 }
@@ -113,13 +118,13 @@ unordered_map<string, string> Solver::unify(Predicate& from, Predicate& to, unor
             }
 
             /**
-             * If the second argument is a constant, we swap the arguments
-             * for the next verification
+             * Si el segundo argumento es una constante, intercambiamos los argumentos
+             * para la siguiente verificación
              */
             if (arg2.getType() == CONSTANT) swap(arg2, arg1);
 
             /**
-             * If the second argument is a variable and it is in the unification, we can not unify
+             * Si el segundo argumento es una variable y está en la unificación, no podemos unificar
              */
             if (ans.count(arg2.getArgSymbol())) {
                 flag = false;
@@ -135,18 +140,18 @@ unordered_map<string, string> Solver::unify(Predicate& from, Predicate& to, unor
 void Solver::makeUnification(vector<Clause> &resolve, unordered_map<string, string> &uni) {
 
     /**
-     * Check for all the clauses and their predicates arguments
+     * Revisar todas las cláusulas y sus argumentos de los predicados
      */
     for (auto &clause: resolve) {
         for (auto &predArg: clause.getPredicate().getArgs()) {
 
             /**
-             * If the argument is a Skolem function and it is in the unification, we must apply the unification
+             * Si el argumento es una función Skolem y está en la unificación, debemos aplicar la unificación
              */
             if (predArg.getType() == SKOLEM && uni.count(predArg.getName())) {
 
                 /**
-                 * The variables has a number at the end, so we can identify them
+                 * Las variables tienen un número al final, por lo que podemos identificarlas
                  */
                 if (uni[predArg.getName()].back() >= 48 && uni[predArg.getName()].back() <= 57) {
                     predArg.setArgSymbol(uni[predArg.getName()]);
@@ -160,19 +165,20 @@ void Solver::makeUnification(vector<Clause> &resolve, unordered_map<string, stri
                 }
 
                 /**
-                 * Clear the arguments of the Skolem function
+                 * "Limpiar" los argumentos de la función Skolem
+                 * 
                  */
                 predArg.getArgsSymbols().clear();
                 continue;
             }
 
             /**
-             * If the argument is a variable and it is in the unification, we must apply the unification
+             * Si el argumento es una variable y está en la unificación, debemos aplicar la unificación
              */
             if (uni.count(predArg.getArgSymbol())) {
 
                 /**
-                 * Same as the Skolem function
+                 * Igual que la función Skolem
                  */
                 if (uni[predArg.getArgSymbol()].back() >= 48 && uni[predArg.getArgSymbol()].back() <= 57) {
                     predArg.setArgSymbol(uni[predArg.getArgSymbol()]);
@@ -185,7 +191,7 @@ void Solver::makeUnification(vector<Clause> &resolve, unordered_map<string, stri
                 }
             } else if (predArg.getType() == SKOLEM) {
                 /**
-                 * If the Skolem Function isn't in the unification, we must apply the unification to its arguments
+                 * Si la función Skolem no está en la unificación, debemos aplicar la unificación a sus argumentos
                  */
                 for (auto &skolemArgs: predArg.getArgsSymbols()) {
                     if (uni.count(skolemArgs)) skolemArgs = uni[skolemArgs];
@@ -198,7 +204,7 @@ void Solver::makeUnification(vector<Clause> &resolve, unordered_map<string, stri
 void Solver::checkInitialResolve(vector<Clause>& resolve, unordered_map<string, string> &uni) {
 
     /**
-     * Check for all pairs of clauses if they can be unified
+     * Revisa si existen pares de cláusulas que puedan ser unificadas
      */
     for (int i = 0; i < (int)resolve.size(); i++) {
         for (int j = i+1; j < (int)resolve.size(); j++) {
@@ -213,18 +219,18 @@ void Solver::checkInitialResolve(vector<Clause>& resolve, unordered_map<string, 
     }
 
     /**
-     * Apply the unification to the pairs that can be unified, identified in the previous loop
+     * Aplica la unificación a los pares que pueden ser unificados, identificados en el bucle anterior
      */
     makeUnification(resolve, uni);
 
 
     /**
-     * Vector to store the clauses that can be canceled
+     * Vector para almacenar las cláusulas que pueden ser canceladas
      */
     vector<bool> deleted(resolve.size(), false);
 
     /**
-     * Check if exist a pair of clauses that can be canceled with NOT links
+     * Revisar si existen pares de cláusulas que puedan ser canceladas con enlaces NOT
      */
     for (int i = 0; i < (int)resolve.size(); i++) {
         if (deleted[i]) continue;
@@ -234,7 +240,7 @@ void Solver::checkInitialResolve(vector<Clause>& resolve, unordered_map<string, 
             Predicate to = resolve[j].getPredicate();
 
             /**
-             * If the clauses have the same name and the same arguments, they can be canceled
+             * Si las cláusulas tienen el mismo nombre y los mismos argumentos, pueden ser canceladas
              */
             if (resolve[i].isNot() == !resolve[j].isNot() && from.getName() == to.getName()) {
                 bool same = true;
@@ -246,7 +252,7 @@ void Solver::checkInitialResolve(vector<Clause>& resolve, unordered_map<string, 
                         continue;
                     }
                     /**
-                     * It does not matter if the arguments are variables or constants, they must be the same
+                     * No importa si los argumentos son variables o constantes, deben ser iguales
                      */
                     if (argFrom.getType() != argTo.getType()) {
                         same = false;
@@ -254,7 +260,7 @@ void Solver::checkInitialResolve(vector<Clause>& resolve, unordered_map<string, 
                     }
 
                     /**
-                     * If the arguments are variables, they must be the same
+                     * Si los argumentos son variables, deben ser iguales
                      */
                     if (argFrom.getType() == VARIABLE && argFrom.getArgSymbol() != argTo.getArgSymbol()) {
                          same = false;
@@ -262,7 +268,7 @@ void Solver::checkInitialResolve(vector<Clause>& resolve, unordered_map<string, 
                     }
 
                     /**
-                     * If the arguments are constants or Skolem functions, they must be the same
+                     * Si los argumentos son constantes o funciones Skolem, deben ser iguales
                      */
                     if ((argFrom.getType() == CONSTANT || argFrom.getType() == SKOLEM) && argFrom.getName() == argTo.getName()) {
                         same = false;
@@ -271,7 +277,7 @@ void Solver::checkInitialResolve(vector<Clause>& resolve, unordered_map<string, 
                 }
 
                 /**
-                 * If the clauses can be canceled, we mark them as deleted
+                 * Si las cláusulas pueden ser canceladas, las marcamos como eliminadas
                  */
                 if (same) {
                     deleted[i] = true; deleted[j] = true;
@@ -281,7 +287,7 @@ void Solver::checkInitialResolve(vector<Clause>& resolve, unordered_map<string, 
     }
 
     /**
-     * We remove the clauses that can be canceled
+     * Borramos las cláusulas que pueden ser canceladas
      */
     vector<Clause> temp;
     for (int i = 0; i < (int)resolve.size(); i++) {
@@ -289,12 +295,12 @@ void Solver::checkInitialResolve(vector<Clause>& resolve, unordered_map<string, 
     }
 
     /**
-     * Update the set of clauses with the clauses that can not be canceled
+     * Actualizamos el conjunto de cláusulas con las cláusulas que no pueden ser canceladas
      */
     resolve = vector<Clause>(temp.begin(), temp.end());
 }
 
-bool Solver::backtrack(vector<Clause> resolve, unordered_map<string, string> uni) {
+bool Solver::backtrack(vector<Clause> resolve, unordered_map<string, string> uni, vector<vector<Clause>> path) {
 
     // cout << "Antes Resolviendo: ";
     // for (auto &clause: resolve) {
@@ -304,7 +310,7 @@ bool Solver::backtrack(vector<Clause> resolve, unordered_map<string, string> uni
     // cout << endl;
 
     /**
-     * Check if the initial set of clauses can be resolved or unified
+     * Revisa si el conjunto inicial de cláusulas puede ser resuelto o unificado
      */
     checkInitialResolve(resolve, uni);
 
@@ -316,9 +322,12 @@ bool Solver::backtrack(vector<Clause> resolve, unordered_map<string, string> uni
     cout << endl;
 
     /**
-     * If the set of clauses is empty, we return true because we have found a solution
+     * Si el conjunto de cláusulas está vacío, devolvemos verdadero porque hemos encontrado una solución
      */
-    if (resolve.empty()) return true;
+    if (resolve.empty()) {
+        this->path = path;
+        return true;
+    }
 
     int i = 0;
     for (auto clause: resolve) {
@@ -329,7 +338,7 @@ bool Solver::backtrack(vector<Clause> resolve, unordered_map<string, string> uni
             for (auto baseClause: baseSet) {
 
                 /**
-                 * This clause maybe can be canceled
+                 * Esta cláusula puede ser cancelada
                  */
                 if (!clause.isNot() == baseClause.isNot() &&
                 pred.getName() == baseClause.getPredicate().getName()
@@ -338,7 +347,7 @@ bool Solver::backtrack(vector<Clause> resolve, unordered_map<string, string> uni
 
                     bool good = true;
                     /**
-                     * We try to unify the predicates to verify if they can be canceled
+                     * Tratamos de unificar los predicados para verificar si pueden ser cancelados
                      */
                     unordered_map<string, string> newUn = unify(pred, baseClause.getPredicate(), uni, good);
 
@@ -348,7 +357,7 @@ bool Solver::backtrack(vector<Clause> resolve, unordered_map<string, string> uni
                     }
 
                     /**
-                     * Merge the two sets of clauses
+                     * Combinar los dos conjuntos de cláusulas
                      */
                     auto resolveCpy = vector<Clause>(resolve.begin(), resolve.end());
                     resolveCpy.erase(resolveCpy.begin()+i);
@@ -358,14 +367,19 @@ bool Solver::backtrack(vector<Clause> resolve, unordered_map<string, string> uni
                     resolveCpy.insert(resolveCpy.end(), baseCpy.begin(), baseCpy.end());
 
                     /**
-                     * Apply the unification for the resulting set of clauses
+                     * Aplicar la unificación para el conjunto resultante de cláusulas
                      */
                     makeUnification(resolveCpy, newUn);
 
+                    path.push_back(baseSet);
                     /**
-                     * If the resulting set of clauses can be resolved, we return true
+                     * Si el conjunto resultante de cláusulas puede ser resuelto, devolvemos verdadero
                      */
-                    if (backtrack(resolveCpy, newUn)) return true;
+                    if (backtrack(resolveCpy, newUn, path)) {
+                        return true;
+                    }
+
+                    path.pop_back();
                 }
 
                 j++;
@@ -375,15 +389,16 @@ bool Solver::backtrack(vector<Clause> resolve, unordered_map<string, string> uni
     }
 
     /**
-     * If we have traversed all the clauses and we have not found a solution, we return false
-     * because we have not found a solution
+     * Si hemos recorrido todas las cláusulas y no hemos encontrado una solución, devolvemos falso
+     * porque no hemos encontrado una solución
      */
     return false;
 }
 
 bool Solver::resolve(vector<Clause> resolve) {
     unordered_map<string,string> unifications;
-    return backtrack(resolve, unifications);
+    vector<vector<Clause>> path;
+    return backtrack(resolve, unifications, path);
 }
 
 void Solver::printSubstitution() {
@@ -392,4 +407,8 @@ void Solver::printSubstitution() {
         cout << pair.first << " -> " << pair.second << ", ";
     }
     cout << endl;
+}
+
+vector<vector<Clause>> Solver::getPath() {
+    return path;
 }

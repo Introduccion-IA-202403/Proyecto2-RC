@@ -1,6 +1,3 @@
-//
-// Created by talkysafe143 on 22/09/24.
-//
 
 #ifndef PROYECTO2_RC_CLAUSE_H
 #define PROYECTO2_RC_CLAUSE_H
@@ -13,14 +10,14 @@ class Clause {
 public:
 
     /**
-     *  Default constructor
+    *  Constructor por defecto
      */
     Clause() = default;
 
     /**
-     * Constructor for a clause with a string and a start index to parse it
-     * @param raw The string to parse
-     * @param start The initial index to start parsing
+    * Constructor para una cláusula con una cadena y un índice de inicio para construirla
+    * @param raw La cadena a construir
+    * @param start El índice inicial para comenzar la construcción
      */
     Clause(string &raw, int &start);
 
@@ -49,9 +46,9 @@ public:
     void setParent(Clause *n);
 
     /**
-     * Evaluates a string to a Link
-     * @param str The string to evaluate
-     * @return  The Link that corresponds to the string
+    * Evalúa una cadena a un conector
+     * @param str El string a evaluar
+     * @return  El conector que corresponde al string
      */
     Link evalLink(string str);
 

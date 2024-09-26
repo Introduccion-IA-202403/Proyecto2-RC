@@ -15,22 +15,22 @@ class PredicateArg {
 public:
 
     /**
-     * Constructor for a PredicateArg
-     * @param name The name of the argument
-     * @param symbol The symbol of the argument
-     * @param type The type of the argument
+     * Constructor para un PredicateArg
+     * @param name El nombre del argumento
+     * @param symbol El simbolo del argumento
+     * @param type El tipo de argumento
      */
     PredicateArg(string name, string symbol, PredicateArgType type) : name(name), argSymbol(symbol), type(type) {};
 
     /**
-     * Default constructor
+     * Constructor por defecto
      */
     PredicateArg() = default;
 
     /**
-     * For Skolem Functions
-     * @param n The name of the function
-     * @param args The arguments of the function
+     * Para funciones Skolem
+     * @param n El nombre de la función
+     * @param args Los argumentos de la función
      */
     PredicateArg(string n, vector<string> args) : name(n), argsSymbols(args), type(SKOLEM) {};
 
@@ -51,8 +51,8 @@ public:
     void setArgsSymbols(vector<string> argsSymbols);
 
     /**
-     * Adds a symbol to the vector of arguments
-     * @param n The symbol to add
+     * Añade un simbolo al vector de argumentos
+     * @param n El simbolo a añadir
      */
     void addArgSymbolVector(char n);
 
